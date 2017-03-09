@@ -7,7 +7,7 @@ import (
 	g "github.com/soniah/gosnmp"
 	"log"
 	"strconv"
-	//"strings"
+	"strings"
 	//"time"
 )
 
@@ -31,6 +31,7 @@ func tonerOutput(color string, maxValue string, lvlValue string) {
 	return
 }
 func tonerLevel(color string, brand string) {
+    color = strings.ToUpper(color)
 	var tonerColor string
 	if brand == "HP" {
 		var C_MAX string = ".1.3.6.1.2.1.43.11.1.1.8.1.2" // Max Cyan Toner

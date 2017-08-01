@@ -4,10 +4,11 @@ import (
 	//"errors"
 	"flag"
 	"fmt"
-	g "github.com/soniah/gosnmp"
 	"log"
 	"strconv"
 	"strings"
+
+	g "github.com/soniah/gosnmp"
 	//"time"
 )
 
@@ -15,9 +16,36 @@ var host = flag.String("H", "", "Printer to query")
 var color = flag.String("C", "K", "Toner Color")
 var brand = flag.String("B", "HP", "Printer Brand")
 
+// toners struct
+type toners struct {
+	cyanMax    string
+	cyanLvl    string
+	magentaMax string
+	magentaLvl string
+	yellowMax  string
+	yellowLvl  string
+	kromaMax   string
+	kromaLvl   string
+}
+
+var hp = &toners{
+	".1.3.6.1.2.1.43.11.1.1.8.1.2", ".1.3.6.1.2.1.43.11.1.1.9.1.2",
+	".1.3.6.1.2.1.43.11.1.1.8.1.3", ".1.3.6.1.2.1.43.11.1.1.9.1.3",
+	".1.3.6.1.2.1.43.11.1.1.8.1.4", ".1.3.6.1.2.1.43.11.1.1.9.1.4",
+	".1.3.6.1.2.1.43.11.1.1.8.1.1", ".1.3.6.1.2.1.43.11.1.1.9.1.1",
+}
+
+var utax = &toners{
+	".1.3.6.1.2.1.43.11.1.1.8.1.1", ".1.3.6.1.2.1.43.11.1.1.9.1.1",
+	".1.3.6.1.2.1.43.11.1.1.8.1.2", ".1.3.6.1.2.1.43.11.1.1.9.1.2",
+	".1.3.6.1.2.1.43.11.1.1.8.1.3", ".1.3.6.1.2.1.43.11.1.1.9.1.3",
+	".1.3.6.1.2.1.43.11.1.1.8.1.4", ".1.3.6.1.2.1.43.11.1.1.9.1.4",
+}
+
 func tonerOutput(color string, maxValue string, lvlValue string) {
 	max, errm := strconv.Atoi(maxValue)
 	lvl, errl := strconv.Atoi(lvlValue)
+	// var output string
 	if errm == nil && errl == nil {
 		if max != 0 {
 			level := 100 * float64(float64(lvl)/float64(max))
@@ -30,62 +58,38 @@ func tonerOutput(color string, maxValue string, lvlValue string) {
 	}
 	return
 }
+
 func tonerLevel(color string, brand string) {
-    color = strings.ToUpper(color)
+	color = strings.ToUpper(color)
 	var tonerColor string
-	if brand == "HP" {
-		var C_MAX string = ".1.3.6.1.2.1.43.11.1.1.8.1.2" // Max Cyan Toner
-		var C_LVL string = ".1.3.6.1.2.1.43.11.1.1.9.1.2" // Remaining Cyan Toner
-		var M_MAX string = ".1.3.6.1.2.1.43.11.1.1.8.1.3" // Max Magenta Toner
-		var M_LVL string = ".1.3.6.1.2.1.43.11.1.1.9.1.3" // Remaining Magenta Toner
-		var Y_MAX string = ".1.3.6.1.2.1.43.11.1.1.8.1.4" // Max Yellow Toner
-		var Y_LVL string = ".1.3.6.1.2.1.43.11.1.1.9.1.4" // Remaining Yellow Toner
-		var K_MAX string = ".1.3.6.1.2.1.43.11.1.1.8.1.1" // Max Black Toner
-		var K_LVL string = ".1.3.6.1.2.1.43.11.1.1.9.1.1" // Remaining Black Toner
+	var t toners
 
-		if color == "C" {
-			tonerColor = "CYAN"
-			tonerOutput(tonerColor, getSNMPValue(C_MAX), getSNMPValue(C_LVL))
-		}
-		if color == "M" {
-			tonerColor = "MAGENTA"
-			tonerOutput(tonerColor, getSNMPValue(M_MAX), getSNMPValue(M_LVL))
-		}
-		if color == "Y" {
-			tonerColor = "YELLOW"
-			tonerOutput(tonerColor, getSNMPValue(Y_MAX), getSNMPValue(Y_LVL))
-		}
-		if color == "K" {
-			tonerColor = "BLACK"
-			tonerOutput(tonerColor, getSNMPValue(K_MAX), getSNMPValue(K_LVL))
-		}
+	switch brand {
+	case "HP":
+		t = *hp
+	case "UTAX":
+		t = *utax
+	case "KYOCERA":
+		t = *utax
 	}
-	if brand == "UTAX" || brand == "KYOCERA" {
-		var C_MAX string = ".1.3.6.1.2.1.43.11.1.1.8.1.1" // Max Cyan Toner
-		var C_LVL string = ".1.3.6.1.2.1.43.11.1.1.9.1.1" // Remaining Cyan Toner
-		var M_MAX string = ".1.3.6.1.2.1.43.11.1.1.8.1.2" // Max Magenta Toner
-		var M_LVL string = ".1.3.6.1.2.1.43.11.1.1.9.1.2" // Remaining Magenta Toner
-		var Y_MAX string = ".1.3.6.1.2.1.43.11.1.1.8.1.3" // Max Yellow Toner
-		var Y_LVL string = ".1.3.6.1.2.1.43.11.1.1.9.1.3" // Remaining Yellow Toner
-		var K_MAX string = ".1.3.6.1.2.1.43.11.1.1.8.1.4" // Max Black Toner
-		var K_LVL string = ".1.3.6.1.2.1.43.11.1.1.9.1.4" // Remaining Black Toner
 
-		if color == "C" {
-			tonerColor = "CYAN"
-			tonerOutput(tonerColor, getSNMPValue(C_MAX), getSNMPValue(C_LVL))
-		}
-		if color == "M" {
-			tonerColor = "MAGENTA"
-			tonerOutput(tonerColor, getSNMPValue(M_MAX), getSNMPValue(M_LVL))
-		}
-		if color == "Y" {
-			tonerColor = "YELLOW"
-			tonerOutput(tonerColor, getSNMPValue(Y_MAX), getSNMPValue(Y_LVL))
-		}
-		if color == "K" {
-			tonerColor = "BLACK"
-			tonerOutput(tonerColor, getSNMPValue(K_MAX), getSNMPValue(K_LVL))
-		}
+	fmt.Printf("%v", t.cyanMax)
+
+	if color == "C" {
+		tonerColor = "CYAN"
+		tonerOutput(tonerColor, getSNMPValue(t.cyanMax), getSNMPValue(t.cyanLvl))
+	}
+	if color == "M" {
+		tonerColor = "MAGENTA"
+		tonerOutput(tonerColor, getSNMPValue(t.magentaMax), getSNMPValue(t.magentaLvl))
+	}
+	if color == "Y" {
+		tonerColor = "YELLOW"
+		tonerOutput(tonerColor, getSNMPValue(t.yellowMax), getSNMPValue(t.yellowLvl))
+	}
+	if color == "K" {
+		tonerColor = "BLACK"
+		tonerOutput(tonerColor, getSNMPValue(t.kromaMax), getSNMPValue(t.kromaLvl))
 	}
 	return
 }
@@ -115,7 +119,6 @@ func main() {
 	//var flg = ""
 	if *host == "" {
 		fmt.Println("Host not set")
-		return
 	} else {
 		//fmt.Printf("Host:\t%s\nColor:\t%s\nBrand:\t%s\n", *host, *color, *brand)
 		tonerLevel(*color, *brand)

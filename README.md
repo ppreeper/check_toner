@@ -3,7 +3,7 @@
 
 This is a go snmp checker for toner levels in printers.
 
-The following are supported:
+The following brands are supported:
 * HP (CMYK)
 * UTAX (CMYK)
 * KYCERA (CMYK)

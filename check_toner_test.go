@@ -55,16 +55,16 @@ var mulColorBrand = []struct {
 	expected string
 }{
 	{"C", "HP", "CYAN Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"C", "UTAX", "CYAN Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"C", "KYOCERA", "CYAN Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
 	{"M", "HP", "MAGENTA Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"M", "UTAX", "MAGENTA Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"M", "KYOCERA", "MAGENTA Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
 	{"Y", "HP", "YELLOW Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"Y", "UTAX", "YELLOW Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"Y", "KYOCERA", "YELLOW Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
 	{"K", "HP", "BLACK Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
+	{"C", "UTAX", "CYAN Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
+	{"M", "UTAX", "MAGENTA Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
+	{"Y", "UTAX", "YELLOW Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
 	{"K", "UTAX", "BLACK Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
+	{"C", "KYOCERA", "CYAN Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
+	{"M", "KYOCERA", "MAGENTA Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
+	{"Y", "KYOCERA", "YELLOW Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
 	{"K", "KYOCERA", "BLACK Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
 }
 

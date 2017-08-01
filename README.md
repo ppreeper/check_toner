@@ -2,7 +2,8 @@
 # check_toner
 
 This is a go snmp checker for toner levels in printers.
+
 The following are supported:
-*HP (CMYK)
-*UTAX (CMYK)
-*KYCERA (CMYK)
+* HP (CMYK)
+* UTAX (CMYK)
+* KYCERA (CMYK)

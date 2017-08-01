@@ -2,9 +2,10 @@ package main
 
 import (
 	//"errors"
+
 	"flag"
 	"fmt"
-	"log"
+	"os"
 	"strconv"
 	"strings"
 
@@ -68,6 +69,7 @@ func tonerLevel(color string, brand string) string {
 	var tonerColor string
 	var t toners
 	var output string
+	var max, lvl string
 
 	switch brand {
 	case "HP":
@@ -80,47 +82,52 @@ func tonerLevel(color string, brand string) string {
 
 	if color == "C" {
 		tonerColor = "CYAN"
-		output = tonerOutput(tonerColor, getSNMPValue(t.cyanMax), getSNMPValue(t.cyanLvl))
+		max, _ = getSNMPValue(t.cyanMax)
+		lvl, _ = getSNMPValue(t.cyanLvl)
 	}
 	if color == "M" {
 		tonerColor = "MAGENTA"
-		output = tonerOutput(tonerColor, getSNMPValue(t.magentaMax), getSNMPValue(t.magentaLvl))
+		max, _ = getSNMPValue(t.magentaMax)
+		lvl, _ = getSNMPValue(t.magentaLvl)
 	}
 	if color == "Y" {
 		tonerColor = "YELLOW"
-		output = tonerOutput(tonerColor, getSNMPValue(t.yellowMax), getSNMPValue(t.yellowLvl))
+		max, _ = getSNMPValue(t.yellowMax)
+		lvl, _ = getSNMPValue(t.yellowLvl)
 	}
 	if color == "K" {
 		tonerColor = "BLACK"
-		output = tonerOutput(tonerColor, getSNMPValue(t.kromaMax), getSNMPValue(t.kromaLvl))
+		max, _ = getSNMPValue(t.kromaMax)
+		lvl, _ = getSNMPValue(t.kromaLvl)
 	}
+	output = tonerOutput(tonerColor, max, lvl)
 	return output
 }
 
-func getSNMPValue(oid string) string {
+func getSNMPValue(oid string) (string, error) {
 	g.Default.Target = *host
 	err := g.Default.Connect()
 	if err != nil {
-		log.Fatalf("Connect() err: %v", err)
+		return "", fmt.Errorf("Connect() err: %v", err)
 	}
 	defer g.Default.Conn.Close()
 	oids := []string{oid}
-	result, err2 := g.Default.Get(oids)
-	if err2 != nil {
-		log.Fatalf("Get() err: %v", err2)
+	result, err := g.Default.Get(oids)
+	if err != nil {
+		return "", fmt.Errorf("Get() err: %v", err)
 	}
-	return fmt.Sprintf("%s", g.ToBigInt(result.Variables[0].Value))
+	return fmt.Sprintf("%s", g.ToBigInt(result.Variables[0].Value)), err
 }
 
 // main function
 func main() {
 	flag.Parse()
 	if *host == "" {
-		fmt.Println("Host not set")
+		fmt.Fprintf(os.Stdout, "Host not set\n")
 	} else {
 		//fmt.Printf("Host:\t%s\nColor:\t%s\nBrand:\t%s\n", *host, *color, *brand)
 		r := tonerLevel(*color, *brand)
-		fmt.Printf("%v", r)
+		fmt.Fprintf(os.Stdout, "%s", r)
 	}
 	return
 }

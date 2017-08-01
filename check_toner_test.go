@@ -53,22 +53,21 @@ func BenchmarkTonerOutput(b *testing.B) {
 
 // mulColorTests use values that you know are right
 var mulColorBrand = []struct {
-	color    string
-	brand    string
-	expected string
+	color string
+	brand string
 }{
-	{"C", "HP", "CYAN Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"M", "HP", "MAGENTA Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"Y", "HP", "YELLOW Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"K", "HP", "BLACK Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"C", "UTAX", "CYAN Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"M", "UTAX", "MAGENTA Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"Y", "UTAX", "YELLOW Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"K", "UTAX", "BLACK Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"C", "KYOCERA", "CYAN Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"M", "KYOCERA", "MAGENTA Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"Y", "KYOCERA", "YELLOW Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
-	{"K", "KYOCERA", "BLACK Toner OK -- Toner Levels: 85 of 100 Remaining | 85\n"},
+	{"C", "HP"},
+	{"M", "HP"},
+	{"Y", "HP"},
+	{"K", "HP"},
+	{"C", "UTAX"},
+	{"M", "UTAX"},
+	{"Y", "UTAX"},
+	{"K", "UTAX"},
+	{"C", "KYOCERA"},
+	{"M", "KYOCERA"},
+	{"Y", "KYOCERA"},
+	{"K", "KYOCERA"},
 }
 
 // TestTonerLevel test
@@ -110,12 +109,9 @@ func TestGetSNMPValue(t *testing.T) {
 	oid := ".1.3.6.1.2.1.43.11.1.1.8.1.1"
 	for _, mt := range mulSNMPTests {
 		*host = mt.host
-		// fmt.Printf("%s\t%s\n", mt.host, mt.expected)
 		_, err := getSNMPValue(oid)
 		if err != nil {
-			// fmt.Printf("got %s\texpected: %s\n", err.Error(), mt.expected)
 			if !strings.HasPrefix(err.Error(), mt.expected) {
-				// fmt.Printf("nope\n")
 				t.Errorf("getSNMPValue error does not Match")
 			}
 		}
@@ -132,11 +128,9 @@ func TestMain(t *testing.T) {
 			if mt.color == "K" {
 				*color = mt.color
 				*brand = mt.brand
-				// fmt.Printf("%s %s %s\n", *host, *brand, *color)
 				message := captureStdout(main)
 				sc := sPattern.FindSubmatch([]byte(message))
 				if len(sc) > 0 {
-					// fmt.Printf("%s\n%s\n", message, string(sc[0]))
 					if !sPattern.Match([]byte(message)) {
 						t.Errorf("Main output not correct: %s %s\n", mt.brand, mt.color)
 					}
@@ -150,11 +144,9 @@ func TestMain(t *testing.T) {
 		for _, mt := range mulColorBrand {
 			*color = mt.color
 			*brand = mt.brand
-			// fmt.Printf("%s %s %s\n", *host, *brand, *color)
 			message := captureStdout(main)
 			sc := sPattern.FindSubmatch([]byte(message))
 			if len(sc) > 0 {
-				// fmt.Printf("%s\n%s\n", message, string(sc[0]))
 				if !sPattern.Match([]byte(message)) {
 					t.Errorf("Main output not correct: %s %s\n", mt.brand, mt.color)
 				}
@@ -168,7 +160,6 @@ func TestMain(t *testing.T) {
 			*color = mt.color
 			*brand = mt.brand
 			message := captureStdout(main)
-			// fmt.Printf("%s", message)
 			if message != "Host not set\n" {
 				t.Errorf("Not matching: Host not set")
 			}
@@ -180,12 +171,9 @@ func captureStdout(f func()) string {
 	old := os.Stdout
 	r, w, _ := os.Pipe()
 	os.Stdout = w
-
 	f()
-
 	w.Close()
 	os.Stdout = old
-
 	var buf bytes.Buffer
 	io.Copy(&buf, r)
 	return buf.String()

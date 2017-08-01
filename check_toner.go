@@ -1,8 +1,6 @@
 package main
 
 import (
-	//"errors"
-
 	"flag"
 	"fmt"
 	"os"
@@ -10,7 +8,6 @@ import (
 	"strings"
 
 	g "github.com/soniah/gosnmp"
-	//"time"
 )
 
 var host = flag.String("H", "", "Printer to query")
@@ -125,7 +122,6 @@ func main() {
 	if *host == "" {
 		fmt.Fprintf(os.Stdout, "Host not set\n")
 	} else {
-		//fmt.Printf("Host:\t%s\nColor:\t%s\nBrand:\t%s\n", *host, *color, *brand)
 		r := tonerLevel(*color, *brand)
 		fmt.Fprintf(os.Stdout, "%s", r)
 	}

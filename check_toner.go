@@ -125,5 +125,6 @@ func main() {
 		r := tonerLevel(*color, *brand)
 		fmt.Fprintf(os.Stdout, "%s", r)
 	}
+	fmt.Printf(output)
 	return
 }

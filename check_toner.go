@@ -62,6 +62,8 @@ func tonerOutput(color string, maxValue string, lvlValue string) string {
 }
 
 func tonerLevel(color string, brand string) string {
+	// fmt.Printf("color: %s\n", color)
+	// fmt.Printf("brand: %s\n", brand)
 	color = strings.ToUpper(color)
 	var tonerColor string
 	var t toners
@@ -97,6 +99,9 @@ func tonerLevel(color string, brand string) string {
 		max, _ = getSNMPValue(t.kromaMax)
 		lvl, _ = getSNMPValue(t.kromaLvl)
 	}
+	// fmt.Printf("tonerColor: %s\n", tonerColor)
+	// fmt.Printf("max: %s\n", max)
+	// fmt.Printf("lvl: %s\n", lvl)
 	output = tonerOutput(tonerColor, max, lvl)
 	return output
 }
@@ -113,6 +118,8 @@ func getSNMPValue(oid string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("Get() err: %v", err)
 	}
+	// fmt.Printf("%v\n", result)
+	// fmt.Printf("%v\n", result.Variables[0].Value)
 	return fmt.Sprintf("%s", g.ToBigInt(result.Variables[0].Value)), err
 }
 
@@ -125,6 +132,5 @@ func main() {
 		r := tonerLevel(*color, *brand)
 		fmt.Fprintf(os.Stdout, "%s", r)
 	}
-	fmt.Printf(output)
 	return
 }

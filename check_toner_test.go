@@ -36,7 +36,7 @@ var mulColorTests = []struct {
 
 // TestTonerOutput test
 func TestTonerOutput(t *testing.T) {
-	var op string
+	// var op string
 	for _, mt := range mulColorTests {
 		r := tonerOutput(mt.color, mt.maxValue, mt.lvlValue)
 		if r != mt.expected {

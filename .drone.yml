@@ -1,7 +1,0 @@
-pipeline:
-    build:
-        image: golang
-        commands:
-            - go get github.com/soniah/gosnmp
-            - go build
-            - go test -cover -race
